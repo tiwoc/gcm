@@ -12,7 +12,8 @@ const (
 // Overview for more information:
 // http://developer.android.com/google/gcm/gcm.html#send-msg
 type Message struct {
-	RegistrationIDs       []string               `json:"registration_ids"`
+	To                    string                 `json:"to,omitempty"`
+	RegistrationIDs       []string               `json:"registration_ids,omitempty"`
 	CollapseKey           string                 `json:"collapse_key,omitempty"`
 	Data                  map[string]interface{} `json:"data,omitempty"`
 	Notification          Notification           `json:"notification,omitempty"`
@@ -47,6 +48,10 @@ func NewMessage(data map[string]interface{}, regIDs ...string) *Message {
 
 func NewNotification(notification Notification, regIDs ...string) *Message {
 	return &Message{RegistrationIDs: regIDs, Notification: notification}
+}
+
+func NewTopicMessage(data map[string]interface{}, topic string) *Message {
+	return &Message{To: topic, Data: data}
 }
 
 func NewMessageWithNotification(data map[string]interface{}, notification Notification, regIDs ...string) *Message {

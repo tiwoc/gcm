@@ -168,7 +168,13 @@ func updateStatus(msg *Message, resp *Response, allResults map[string]Result) in
 		}
 	}
 	msg.RegistrationIDs = unsentRegIDs
-	return len(unsentRegIDs)
+	if len(unsentRegIDs) > 0 {
+		return len(unsentRegIDs)
+	} else if msg.To != "" && resp.Failure != 0 {
+		return 1
+	} else {
+		return 0
+	}
 }
 
 // min returns the smaller of two integers. For exciting religious wars
@@ -197,9 +203,9 @@ func checkSender(sender *Sender) error {
 func checkMessage(msg *Message) error {
 	if msg == nil {
 		return errors.New("the message must not be nil")
-	} else if msg.RegistrationIDs == nil {
-		return errors.New("the message's RegistrationIDs field must not be nil")
-	} else if len(msg.RegistrationIDs) == 0 {
+	} else if msg.RegistrationIDs == nil && msg.To == "" {
+		return errors.New("the message's RegistrationIDs field must not be nil (and to empty)")
+	} else if msg.To == "" && len(msg.RegistrationIDs) == 0 {
 		return errors.New("the message must specify at least one registration ID")
 	} else if len(msg.RegistrationIDs) > 1000 {
 		return errors.New("the message may specify at most 1000 registration IDs")
