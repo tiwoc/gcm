@@ -21,6 +21,7 @@ type Message struct {
 	RestrictedPackageName string                 `json:"restricted_package_name,omitempty"`
 	DryRun                bool                   `json:"dry_run,omitempty"`
 	Priority              string                 `json:"priority,omitempty"`
+	ContentAvailable      bool                   `json:"content_available,omitempty"`
 }
 
 type Notification struct {
